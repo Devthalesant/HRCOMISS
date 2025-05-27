@@ -29,21 +29,38 @@ col1, col2, col3 = st.columns(3)
 with col1:
     # Upload dos Xlsx Bases
     vmb = st.file_uploader(
-        "Carregue o arquivo deVendas Mensais Brutas -💵 em excel:",
+        "**<span style='font-size:18px;'>Carregue o arquivo de Vendas Mensais Brutas -💵 em excel:</span>**",
         type=["xlsx"],
-        accept_multiple_files=False
+        accept_multiple_files=False,
+        key="vmb",
+        label_visibility="visible"
     )
 with col2:
     # Upload dos Xlsx Bases
     venda_x_pgto = st.file_uploader(
-        "Carregue o arquivo de Venda X Forma de PGTO -💳 em excel:",
+        "**<span style='font-size:18px;'>Carregue o arquivo de Venda X Forma de PGTO -💳 em excel:</span>**",
         type=["xlsx"],
-        accept_multiple_files=False
+        accept_multiple_files=False,
+        key="venda_x_pgto",
+        label_visibility="visible"
     )
 with col3:
     # Upload dos Xlsx Bases
     arquivo_principal_path = st.file_uploader(
-        "Carregue o arquivo com as demais informações -⚡⬆️ Metas em excel:",
+        "**<span style='font-size:18px;'>Carregue o arquivo com as demais informações -⚡⬆️ Metas em excel:</span>**",
         type=["xlsx"],
-        accept_multiple_files=False
+        accept_multiple_files=False,
+        key="arquivo_principal_path",
+        label_visibility="visible"
+    )
+    # Aplica o markdown para permitir HTML no label
+    st.markdown(
+        """
+        <style>
+        .stFileUploader label span {
+            font-weight: bold !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
     )
