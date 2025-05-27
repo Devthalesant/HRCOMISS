@@ -238,11 +238,21 @@ def Comission_calculator(vmb,venda_x_pgto,arquivo_principal_path,mes,ano):
   venda_x_pgto = Treating_VendaXPgto(venda_x_pgto)
   Garantido_meta_1_mes = Treating_Garantido_meta_1_mes(arquivo_principal_path)
 
-  merged_df = pd.merge(Garantido_meta_1_mes, vmb_final[['Consultor', 'Mês/Ano', 'Valor líquido']],
-                      on=['Consultor'], how='left')
+  # Fazendo o merge considerando também a unidade, para garantir que só traga vendas da unidade correta
+  merged_df = pd.merge(
+      Garantido_meta_1_mes,
+      vmb_final[['Consultor', 'Mês/Ano', 'Valor líquido', 'Unidade']],
+      on=['Consultor', 'Unidade'],
+      how='left'
+  )
 
-  final_merged_df = pd.merge(merged_df, venda_x_pgto[['Consultor', 'Mês/Ano', 'Valor líquido à Vista']],
-                      on=['Consultor'], how='left', suffixes=('', '_Vista'))
+  final_merged_df = pd.merge(
+      merged_df,
+      venda_x_pgto[['Consultor', 'Mês/Ano', 'Valor líquido à Vista', 'Unidade']],
+      on=['Consultor', 'Unidade'],
+      how='left',
+      suffixes=('', '_Vista')
+  )
 
   final_merged_df_colums = ['Consultor', 'Mês/Ano', 'Unidade', 'Meta de Vendas',
                             'Valor líquido', 'Valor líquido à Vista', 'Valor do Garantido','Primeiro Mês']
@@ -358,9 +368,13 @@ def Comission_calculator(vmb,venda_x_pgto,arquivo_principal_path,mes,ano):
   visualisation_df = pd.concat([final_merged_df_garantido, final_merged_df_primeiro_mes_e_ativo, final_merged_df_normal])
   visualisation_df.sort_values(by=["Unidade", "Consultor"])
 
+  # Formata as colunas de valor para R$
+  valor_cols = ["Meta de Vendas", "Valor líquido", "Valor líquido à Vista", "Valor do Garantido", "Comissão Total"]
+  for col in valor_cols:
+      if col in visualisation_df.columns:
+          visualisation_df[col] = visualisation_df[col].apply(lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
+
   visualisation_df
-
-
  ### CALCULANDO COMISSÃO PERSONAIS
 
 
@@ -403,6 +417,12 @@ def Comission_calculator(vmb,venda_x_pgto,arquivo_principal_path,mes,ano):
   merged_vmb_validador_conversao["Comissão Total"] = (merged_vmb_validador_conversao["% Comissão"] * merged_vmb_validador_conversao["Valor Avaliação"])
 
   Personal_comissão_gpb = merged_vmb_validador_conversao.groupby(["Personais", "Mês/Ano", "Unidade"]).agg({"Comissão Total": "sum"}).reset_index()
+
+  # Formata as colunas de valor para R$
+  valor_cols = ["Comissão Total"]
+  for col in valor_cols:
+      if col in Personal_comissão_gpb.columns:
+          Personal_comissão_gpb[col] = Personal_comissão_gpb[col].apply(lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
 
   Personal_comissão_gpb
 
