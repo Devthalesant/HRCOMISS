@@ -31,25 +31,19 @@ with col1:
     vmb = st.file_uploader(
         "Carregue o arquivo de Vendas Mensais Brutas -💵 em excel:",
         type=["xlsx"],
-        accept_multiple_files=False,
-        key="vmb",
-        label_visibility="visible"
+        accept_multiple_files=False
     )
 with col2:
     # Upload dos Xlsx Bases
     venda_x_pgto = st.file_uploader(
         "Carregue o arquivo de Venda X Forma de PGTO -💳 em excel:",
         type=["xlsx"],
-        accept_multiple_files=False,
-        key="venda_x_pgto",
-        label_visibility="visible"
+        accept_multiple_files=False
     )
 with col3:
     # Upload dos Xlsx Bases
     arquivo_principal_path = st.file_uploader(
         "Carregue o arquivo com as demais informações -⚡⬆️ Metas em excel:",
         type=["xlsx"],
-        accept_multiple_files=False,
-        key="arquivo_principal_path",
-        label_visibility="visible"
+        accept_multiple_files=False
     )
