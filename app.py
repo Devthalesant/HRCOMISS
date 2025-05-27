@@ -3,64 +3,93 @@ import numpy as np
 import streamlit as st
 from func import *
 
-# Set page configuration
-st.set_page_config(
-    page_title="Cálculo de Comissão - Recurosos Humanos",
-    page_icon="💰",
-    layout="wide"
-)
-# Definição do tema
+# --- CORES ---
+COR_BASE = "#7E57C2"  # Lilás escuro
+COR_CLARA = "#ede7f6" # Lilás claro
+COR_TEXTO = "#fff"    # Branco
+
+# --- LOGO ---
+
+st.image("C:/Users/novo1/OneDrive/Desktop/Dev/hrcomiss/logo.png")
+
 st.markdown(
     """
+    <div style="display: flex; align-items: center; margin-bottom: 20px;">
+        <h1 style="color: #fff; margin: 0;">Cálculo de Comissão - Recursos Humanos 💰</h1>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+# --- TEMA E ESTILO ---
+st.markdown(
+    f"""
     <style>
-    .stApp {
-        background-color: #b39ddb;
-    }
+    .stApp {{
+        background-color: {COR_BASE};
+    }}
+    .stTextInput > div > div > input {{
+        background-color: {COR_CLARA};
+        color: {COR_BASE};
+        border-radius: 8px;
+        border: 1px solid {COR_BASE};
+    }}
+    .stButton > button {{
+        background-color: {COR_BASE};
+        color: {COR_TEXTO};
+        border-radius: 8px;
+        border: none;
+        font-weight: bold;
+        font-size: 18px;
+        padding: 10px 24px;
+        margin-top: 10px;
+    }}
+    .stFileUploader > div {{
+        background-color: {COR_CLARA};
+        border-radius: 8px;
+        border: 1px solid {COR_BASE};
+    }}
+    .stDataFrame {{
+        background-color: {COR_CLARA};
+        border-radius: 8px;
+    }}
+    h1, h2, h3, h4, h5, h6 {{
+        color: {COR_TEXTO};
+    }}
     </style>
     """,
     unsafe_allow_html=True
 )
 
-# Title
-st.title("Cálculo de Comissão - Recursos Humanos 💰")
-
-# pedir ao usuário para inputar o mês por escrito e ano:
-
+# --- INPUTS ---
 mes = st.text_input("Digite o mês (por Extenso):")
 ano = st.text_input("Digite o ano:")
 
-
 col1, col2, col3 = st.columns(3)
 with col1:
-    # Upload dos Xlsx Bases
     vmb = st.file_uploader(
-        "Carregue o arquivo de Vendas Mensais Brutas -💵 em excel:",
+        "Vendas Mensais Brutas 💵 (Excel):",
         type=["xlsx"],
         accept_multiple_files=False
     )
 with col2:
-    # Upload dos Xlsx Bases
     venda_x_pgto = st.file_uploader(
-        "Carregue o arquivo de Venda X Forma de PGTO -💳 em excel:",
+        "Venda X Forma de PGTO 💳 (Excel):",
         type=["xlsx"],
         accept_multiple_files=False
     )
 with col3:
-    # Upload dos Xlsx Bases
     arquivo_principal_path = st.file_uploader(
-        "Carregue o arquivo com as demais informações -⚡⬆️ Metas em excel:",
+        "Demais Informações⚡(Excel):",
         type=["xlsx"],
         accept_multiple_files=False
     )
 
-# Verifica se os arquivos foram carregados
-if vmb and venda_x_pgto and arquivo_principal_path and arquivo_principal_path is not None:
-    # Lê os arquivos Excel
+if vmb and venda_x_pgto and arquivo_principal_path:
     vmb_path_exib = pd.read_excel(vmb)
     venda_x_pgto_exib = pd.read_excel(venda_x_pgto)
     arquivo_principal_path_exib = pd.read_excel(arquivo_principal_path)
 
-    # Exibe os DataFrames carregados
     st.subheader("Vendas Mensais Brutas - 💵")
     st.dataframe(vmb_path_exib)
     st.subheader("Venda X Forma de PGTO - 💳")
@@ -68,23 +97,22 @@ if vmb and venda_x_pgto and arquivo_principal_path and arquivo_principal_path is
     st.subheader("Arquivo Principal - ⚡⬆️ Metas")
     st.dataframe(arquivo_principal_path_exib)
 
-    #fala pra o usuário verificar os arquivos e aprtar o botão se estiver tudo ok:
-
     st.markdown(
-        """
+        f"""
         <div style="text-align: center; margin-top: 20px;">
-            <button style="padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px;">
-                Verifique os arquivos e clique em Calcular Comissão se estiver tudo certo! ✅
-            </button>
+            <span style="color: {COR_TEXTO}; font-size: 18px;">
+                Verifique os arquivos e clique em <b>Calcular Comissão</b> se estiver tudo certo! ✅
+            </span>
         </div>
         """,
         unsafe_allow_html=True
     )
-    # Botão para calcular a comissão
-    if st.button("Calcular Comissão"):
+
+    if st.button("Calcular Comissão", key="calcular_comissao", help="Clique para calcular a comissão", use_container_width=True):
         with st.spinner("Calculando comissão, por favor aguarde..."):
-            # Chama a função para calcular a comissão
-            resultado_vendedoras, resultado_personais = Comission_calculator(vmb, venda_x_pgto, arquivo_principal_path,mes,ano)
+            resultado_vendedoras, resultado_personais = Comission_calculator(
+                vmb, venda_x_pgto, arquivo_principal_path, mes, ano
+            )
         st.subheader("Comissão das Vendedoras")
         st.dataframe(resultado_vendedoras)
         st.subheader("Comissão das Personais")
