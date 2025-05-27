@@ -3,9 +3,9 @@ import numpy as np
 
 # Função para tratar a base de VMB
 
-def Treating_VMB(vmb):
+def Treating_VMB(vmb_path):
   # Importando a base
-  vmb = pd.read_excel(vmb)
+  vmb = pd.read_excel(vmb_path)
 
   # Colunas úteis
   vmb_columns = ['ID orçamento','Status','Data venda','Mês venda',
@@ -132,9 +132,9 @@ def treating_vmb_personais(vmb,arquivo_principal_path):
   # Importando a base - nome de personais
   listagem_personal = pd.read_excel(arquivo_principal_path, sheet_name='Sheet3')
 
-  lista_nomes_personais = listagem_personal["Nome_Personal_CRM"].dropna().unique()
+  lista_nomes_personais = listagem_personal["Personais"].dropna().unique()
 
-  lista_nomes_personais = list(listagem_personal["Nome_Personal_CRM"])
+  lista_nomes_personais = list(listagem_personal["Personais"])
 
   # colunas úteis
   vmb_personal_columns = ['ID orçamento','Status', 'Data venda','Mês venda',
@@ -229,10 +229,7 @@ def treating_conversion(arquivo_principal_path):
 
 #################################################################################################################################################
 
-def Comission_calculator(vmb,venda_x_pgto,arquivo_principal_path):
-
-  mes = input("Digite o mês: ")
-  ano = input("Digite o ano: ")
+def Comission_calculator(vmb,venda_x_pgto,arquivo_principal_path,mes,ano):
 
   # colocando em maiúscula :
   mes = mes.upper()
@@ -408,3 +405,5 @@ def Comission_calculator(vmb,venda_x_pgto,arquivo_principal_path):
   Personal_comissão_gpb = merged_vmb_validador_conversao.groupby(["Personais", "Mês/Ano", "Unidade"]).agg({"Comissão Total": "sum"}).reset_index()
 
   Personal_comissão_gpb
+
+  return visualisation_df, Personal_comissão_gpb
