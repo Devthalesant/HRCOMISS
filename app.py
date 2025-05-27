@@ -9,13 +9,41 @@ st.set_page_config(
     page_icon="💰",
     layout="wide"
 )
+# Definição do tema
+st.markdown(
+    """
+    <style>
+    body {
+        background-color: #e6e6fa;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # Title
-st.title("Cálculo de Comissão - Recurosos Humanos")
+st.title("Cálculo de Comissão - Recursos Humanos 💰")
 
-# Upload dos Xlsx Bases
-uploaded_files = st.file_uploader(
-    "Carregue os arquivos Excel (.xlsx) com as bases de dados",
-    type=["xlsx"],
-    accept_multiple_files=True
-)
+
+col1, col2, col3 = st.columns(3)
+with col1:
+    # Upload dos Xlsx Bases
+    vmb = st.file_uploader(
+        "Carregue o arquivo deVendas Mensais Brutas -💵 em excel:",
+        type=["xlsx"],
+        accept_multiple_files=False
+    )
+with col2:
+    # Upload dos Xlsx Bases
+    venda_x_pgto = st.file_uploader(
+        "Carregue o arquivo de Venda X Forma de PGTO -💳 em excel:",
+        type=["xlsx"],
+        accept_multiple_files=False
+    )
+with col3:
+    # Upload dos Xlsx Bases
+    arquivo_principal_path = st.file_uploader(
+        "Carregue o arquivo com as demais informações -⚡⬆️ Metas em excel:",
+        type=["xlsx"],
+        accept_multiple_files=False
+    )
