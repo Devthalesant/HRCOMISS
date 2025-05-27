@@ -10,7 +10,7 @@ COR_TEXTO = "#fff"    # Branco
 
 # --- LOGO ---
 
-st.image("logo.png")
+st.image("C:/Users/novo1/OneDrive/Desktop/Dev/hrcomiss/logo.png")
 
 st.markdown(
     """
