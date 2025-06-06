@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 from func import *
+import io
+import xlsxwriter
 
 # --- CORES ---
 COR_BASE = "#7E57C2"  # Lilás escuro
@@ -108,6 +110,13 @@ if vmb and venda_x_pgto and arquivo_principal_path:
         unsafe_allow_html=True
     )
 
+    # Download buttons
+    def to_excel_bytes(df):
+        output = io.BytesIO()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, index=True)
+        return output.getvalue()
+
     if st.button("Calcular Comissão", key="calcular_comissao", help="Clique para calcular a comissão", use_container_width=True):
         with st.spinner("Calculando comissão, por favor aguarde..."):
             resultado_vendedoras, resultado_personais = Comission_calculator(
@@ -117,3 +126,23 @@ if vmb and venda_x_pgto and arquivo_principal_path:
         st.dataframe(resultado_vendedoras)
         st.subheader("Comissão das Personais")
         st.dataframe(resultado_personais)
+
+        comissao_vendas = to_excel_bytes(resultado_vendedoras)
+        comissao_personais = to_excel_bytes(resultado_personais)
+
+
+        st.download_button(
+            label="Baixar Tabela de Comissão das Vendedoras",
+            data=comissao_vendas,
+            file_name=f"Comissão_vendas{mes}_{ano}.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+
+        st.download_button(
+            label="Baixar Tabela de Comissão das Personais",
+            data=comissao_personais,
+            file_name=f"Comissão_personais{mes}_{ano}.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+
+    

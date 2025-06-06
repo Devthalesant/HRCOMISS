@@ -113,7 +113,7 @@ def Treating_Garantido_meta_1_mes(arquivo_principal_path):
   # Importando a base
   Garantido_meta_1_mes = pd.read_excel(arquivo_principal_path, sheet_name='Sheet1')
 
-  Garantido_meta_1_mes_columns = ['NOME CRM', 'LOJA', 'META DE VENDAS','Valor do Garantido', 'Primeiro Mês']
+  Garantido_meta_1_mes_columns = ['NOME CRM', 'LOJA', 'META DE VENDAS','Valor do Garantido', 'Eh primeiro mês?']
 
   Garantido_meta_1_mes = Garantido_meta_1_mes[Garantido_meta_1_mes_columns]
 
@@ -225,6 +225,13 @@ def treating_conversion(arquivo_principal_path):
 
   conversao_personais = conversao_personais[conversao_personais_columns]
 
+  conversao_personais['Conversão'] = pd.to_numeric(conversao_personais['Conversão'], errors='coerce')
+  conversao_personais['Conversão'] = conversao_personais['Conversão'].fillna(0)
+  conversao_personais['Conversão'] = conversao_personais['Conversão'].astype(float)
+  conversao_personais['Conversão'] = conversao_personais['Conversão'] / 100
+
+  
+
   return conversao_personais
 
 #################################################################################################################################################
@@ -255,7 +262,7 @@ def Comission_calculator(vmb,venda_x_pgto,arquivo_principal_path,mes,ano):
   )
 
   final_merged_df_colums = ['Consultor', 'Mês/Ano', 'Unidade', 'Meta de Vendas',
-                            'Valor líquido', 'Valor líquido à Vista', 'Valor do Garantido','Primeiro Mês']
+                            'Valor líquido', 'Valor líquido à Vista', 'Valor do Garantido','Eh primeiro mês?']
 
 
   final_merged_df = final_merged_df[final_merged_df_colums]
@@ -266,6 +273,12 @@ def Comission_calculator(vmb,venda_x_pgto,arquivo_principal_path,mes,ano):
 
   final_merged_df["Atingimento De Meta Total"] = (final_merged_df["Valor líquido"] / final_merged_df["Meta de Vendas"])*100
   final_merged_df["Atingimento de Meta À Vista"] = (final_merged_df["Valor líquido à Vista"] / (final_merged_df["Meta de Vendas"] * 0.4)) * 100
+
+    # Remover espaços extras na coluna "Eh primeiro mês?"
+  final_merged_df["Eh primeiro mês?"] = final_merged_df["Eh primeiro mês?"].str.strip()
+
+  # Garantir que "Valor do Garantido" seja numérico
+  final_merged_df["Valor do Garantido"] = pd.to_numeric(final_merged_df["Valor do Garantido"], errors='coerce')
 
 
 
@@ -316,15 +329,15 @@ def Comission_calculator(vmb,venda_x_pgto,arquivo_principal_path,mes,ano):
   garantido_groupby = final_merged_df_garantido.groupby(["Unidade", "Consultor","Mês/Ano"]).agg({"Comissão Total": "sum"}).reset_index()
   garantido_groupby
 
-  #PRIMEIRO MÊS:
+  #Eh primeiro mês?:
 
-  # aletaração: foi de : final_merged_df_primeiro_mes_e_ativo = final_merged_df.loc[final_merged_df["Primeiro Mês"] == "Sim"]
+  # aletaração: foi de : final_merged_df_primeiro_mes_e_ativo = final_merged_df.loc[final_merged_df["Eh primeiro mês?"] == "Sim"]
   # Para:
 
-  final_merged_df_primeiro_mes_e_ativo = final_merged_df.loc[(final_merged_df["Primeiro Mês"] == "Sim") & (final_merged_df["Valor do Garantido"] == 0)]
+  final_merged_df_primeiro_mes_e_ativo = final_merged_df.loc[(final_merged_df["Eh primeiro mês?"] == "Sim") & (final_merged_df["Valor do Garantido"] == 0)]
   final_merged_df_primeiro_mes_e_ativo
 
-  # Fixei que é 1 % em cada pois a vendedora primeiro mês e Ativo tem comissão de 2%
+  # Fixei que é 1 % em cada pois a vendedora Eh primeiro mês? e Ativo tem comissão de 2%
   final_merged_df_primeiro_mes_e_ativo['Range de Comissão Total'] = 1/100
   final_merged_df_primeiro_mes_e_ativo['Range de Comissão à Vista'] = 1/100
 
@@ -346,7 +359,7 @@ def Comission_calculator(vmb,venda_x_pgto,arquivo_principal_path,mes,ano):
 
 
   #Faturamento Normal
-  final_merged_df_normal = final_merged_df.loc[(final_merged_df["Primeiro Mês"] == "Não") & (final_merged_df["Valor do Garantido"] == 0)]
+  final_merged_df_normal = final_merged_df.loc[(final_merged_df["Eh primeiro mês?"] == "Não") & (final_merged_df["Valor do Garantido"] == 0)]
 
   # Aplicando as funções para calcular a comissão nas respectivas colunas
   final_merged_df_normal['Range de Comissão Total'] = final_merged_df_normal['Atingimento De Meta Total'].apply(calcular_comissao_total)
@@ -419,11 +432,11 @@ def Comission_calculator(vmb,venda_x_pgto,arquivo_principal_path,mes,ano):
   Personal_comissão_gpb = merged_vmb_validador_conversao.groupby(["Personais", "Mês/Ano", "Unidade"]).agg({"Comissão Total": "sum"}).reset_index()
 
   # Formata as colunas de valor para R$
-  valor_cols = ["Comissão Total"]
+  valor_cols = ["Comissão Total", "Meta", "Faturmento Unidade", "Valor Avaliação"]
   for col in valor_cols:
-      if col in Personal_comissão_gpb.columns:
-          Personal_comissão_gpb[col] = Personal_comissão_gpb[col].apply(lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
+      if col in merged_vmb_validador_conversao.columns:
+          merged_vmb_validador_conversao[col] = merged_vmb_validador_conversao[col].apply(lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
 
-  Personal_comissão_gpb
+  merged_vmb_validador_conversao
 
-  return visualisation_df, Personal_comissão_gpb
+  return visualisation_df, merged_vmb_validador_conversao
