@@ -28,10 +28,11 @@ def calcular_ranking_revenda(base):
     "Amanda Santos Amorim",
     "Tamires Regina de Angelo dos Santos",
     "Nathalia Ranciaro Calabrez",
-    "Karine Oliveira Santos",
+    "KARINE OLIVEIRA SANTOS",
     "Gabriela Gomes Magalhaes dos Anjos",
     "Eloiza Karyna Zonho"
     ]
+
     base = base.loc[~base['Avaliador'].isin(personais)]
 
     def remover_parenteses(nome):
