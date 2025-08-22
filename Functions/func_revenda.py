@@ -26,14 +26,15 @@ def calcular_ranking_revenda(base):
     "Julia Macena Dantas",
     "Paloma Santos Linhares",
     "Amanda Santos Amorim",
-    "Tamires Regina de Angelo dos Santos",
+    "Tamires Regina De A. Dos Santos",
     "Nathalia Ranciaro Calabrez",
-    "KARINE OLIVEIRA SANTOS",
+    "Karine Oliveira Santos",
     "Gabriela Gomes Magalhaes dos Anjos",
     "Eloiza Karyna Zonho"
     ]
 
-    base = base.loc[~base['Avaliador'].isin(personais)]
+    mask = ~base['Avaliador'].str.contains('|'.join(personais), case=False, na=False)
+    base = base.loc[mask]
 
     def remover_parenteses(nome):
         return re.sub(r'\s*\(.*\)', '', nome).strip()
