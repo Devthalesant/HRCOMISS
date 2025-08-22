@@ -36,6 +36,8 @@ def calcular_ranking_revenda(base):
     mask = ~base['Avaliador'].str.contains('|'.join(personais), case=False, na=False)
     base = base.loc[mask]
 
+    base = base.loc[~base['Avaliador'].str.contains("AVAL",case=False)]
+
     def remover_parenteses(nome):
         return re.sub(r'\s*\(.*\)', '', nome).strip()
 
