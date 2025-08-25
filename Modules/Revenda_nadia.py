@@ -91,7 +91,6 @@ st.markdown(
 
 # --- INPUTS ---
 st.markdown("### 📋 Preencha os dados abaixo:")
-st.markdown("### UPDATE??")
 
 col1, col2, col3 = st.columns(3)
 with col1:
