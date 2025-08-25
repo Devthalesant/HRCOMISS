@@ -15,6 +15,7 @@ def calcular_ranking_revenda(base):
 
     base = base.loc[base['Status'] == "Finalizado"]
 
+    base = base.loc[base['Revenda'] == "SIM"]
     base = base.loc[~base['Avaliador'].isna()]
 
     base['Valor líquido'] = base['Valor líquido'].fillna(0)
