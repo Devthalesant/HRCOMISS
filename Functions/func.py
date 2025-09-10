@@ -334,7 +334,7 @@ def Comission_calculator(vmb,venda_x_pgto,arquivo_principal_path,mes,ano):
   # aletaração: foi de : final_merged_df_primeiro_mes_e_ativo = final_merged_df.loc[final_merged_df["Eh primeiro mês?"] == "Sim"]
   # Para:
 
-  final_merged_df_primeiro_mes_e_ativo = final_merged_df.loc[(final_merged_df["Eh primeiro mês?"] == "Sim") & (final_merged_df["Valor do Garantido"] == 0)]
+  final_merged_df_primeiro_mes_e_ativo = final_merged_df.loc[(final_merged_df["Eh primeiro mês?"].str.upper() == "SIM") & (final_merged_df["Valor do Garantido"] == 0)]
   final_merged_df_primeiro_mes_e_ativo
 
   # Fixei que é 1 % em cada pois a vendedora Eh primeiro mês? e Ativo tem comissão de 2%
