@@ -68,7 +68,7 @@ def Treating_VendaXPgto(venda_x_pgto):
   # Filtrando Unidade, Status e Conciliado:
   venda_x_pgto = venda_x_pgto.loc[venda_x_pgto["Status"] == "Finalizado"]
   venda_x_pgto = venda_x_pgto.loc[venda_x_pgto["Unidade"] != "PRAIA GRANDE"]
-  venda_x_pgto = venda_x_pgto.loc[venda_x_pgto["Conciliado (sim ou não)"] == "Sim"]
+  venda_x_pgto = venda_x_pgto.loc[venda_x_pgto["Conciliado (sim ou não)"].str.upper() == "SIM"]
 
   venda_x_pgto['Forma de pagamento'].unique()
 
@@ -359,7 +359,7 @@ def Comission_calculator(vmb,venda_x_pgto,arquivo_principal_path,mes,ano):
 
 
   #Faturamento Normal
-  final_merged_df_normal = final_merged_df.loc[(final_merged_df["Eh primeiro mês?"] == "Não") & (final_merged_df["Valor do Garantido"] == 0)]
+  final_merged_df_normal = final_merged_df.loc[(final_merged_df["Eh primeiro mês?"].str.upper() == "NÃO") & (final_merged_df["Valor do Garantido"] == 0)]
 
   # Aplicando as funções para calcular a comissão nas respectivas colunas
   final_merged_df_normal['Range de Comissão Total'] = final_merged_df_normal['Atingimento De Meta Total'].apply(calcular_comissao_total)
