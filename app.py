@@ -24,8 +24,8 @@ revenue = st.Page(
 # --- NAVIGATION SETUP [WITH SECTIONS]---
 pg = st.navigation(
     {
-        "Visualização - Estoque 💰": [comission],
-        "Entradas - Estoque 🏆": [revenue],
+        "Calculadora de Comissão 💰": [comission],
+        "Ranking de Revenda 🏆": [revenue],
     }
 )
 
