@@ -272,7 +272,7 @@ def Comission_calculator(vmb,venda_x_pgto,arquivo_principal_path,mes,ano):
   final_merged_df
 
   final_merged_df["Atingimento De Meta Total"] = (final_merged_df["Valor líquido"] / final_merged_df["Meta de Vendas"])*100
-  final_merged_df["Atingimento de Meta À Vista"] = (final_merged_df["Valor líquido à Vista"] / (final_merged_df["Meta de Vendas"] * 0.4)) * 100
+#   final_merged_df["Atingimento de Meta À Vista"] = (final_merged_df["Valor líquido à Vista"] / (final_merged_df["Meta de Vendas"] * 0.4)) * 100
 
     # Remover espaços extras na coluna "Eh primeiro mês?"
   final_merged_df["Eh primeiro mês?"] = final_merged_df["Eh primeiro mês?"].str.strip()
@@ -286,11 +286,11 @@ def Comission_calculator(vmb,venda_x_pgto,arquivo_principal_path,mes,ano):
       if atingimento <= 80:
           return 0.50 / 100
       elif 80 < atingimento <= 90:
-          return 0.75 / 100
+          return 1.5 / 100
       elif 90 < atingimento <= 100:
-          return 1 / 100
+          return 2 / 100
       else:
-          return 1.25 / 100
+          return 2.5 / 100
 
   # Função para calcular comissões do Faturamento à Vista
   def calcular_comissao_vista(atingimento):
@@ -311,14 +311,15 @@ def Comission_calculator(vmb,venda_x_pgto,arquivo_principal_path,mes,ano):
 
   # Aplicando as funções para calcular a comissão nas respectivas colunas
   final_merged_df_garantido['Range de Comissão Total'] = final_merged_df_garantido['Atingimento De Meta Total'].apply(calcular_comissao_total)
-  final_merged_df_garantido['Range de Comissão à Vista'] = final_merged_df_garantido['Atingimento de Meta À Vista'].apply(calcular_comissao_vista)
+#   final_merged_df_garantido['Range de Comissão à Vista'] = final_merged_df_garantido['Atingimento de Meta À Vista'].apply(calcular_comissao_vista)
 
   # Calculando o valor de comissão pelo atingimento de meta e meta à vista
-  final_merged_df_garantido["Comissão Total"] = (
-      (final_merged_df_garantido["Range de Comissão Total"] * final_merged_df_garantido["Valor líquido"]) +
-      (final_merged_df_garantido["Range de Comissão à Vista"] * final_merged_df_garantido["Valor líquido"])
-  )
-
+#   final_merged_df_garantido["Comissão Total"] = (
+#       (final_merged_df_garantido["Range de Comissão Total"] * final_merged_df_garantido["Valor líquido"]) +
+#       (final_merged_df_garantido["Range de Comissão à Vista"] * final_merged_df_garantido["Valor líquido"])
+#   )
+  final_merged_df_garantido["Comissão Total"] = (final_merged_df_garantido["Range de Comissão Total"] * final_merged_df_garantido["Valor líquido"])
+  
   #Verificando se o valor é maior ou menor que o garantido e substituindo caso seja menor:
   final_merged_df_garantido["Comissão Total"] = np.where(
       final_merged_df_garantido["Comissão Total"] < final_merged_df_garantido["Valor do Garantido"],
@@ -337,15 +338,17 @@ def Comission_calculator(vmb,venda_x_pgto,arquivo_principal_path,mes,ano):
   final_merged_df_primeiro_mes_e_ativo = final_merged_df.loc[(final_merged_df["Eh primeiro mês?"].str.upper() == "SIM") & (final_merged_df["Valor do Garantido"] == 0)]
   final_merged_df_primeiro_mes_e_ativo
 
-  # Fixei que é 1 % em cada pois a vendedora Eh primeiro mês? e Ativo tem comissão de 2%
-  final_merged_df_primeiro_mes_e_ativo['Range de Comissão Total'] = 1/100
-  final_merged_df_primeiro_mes_e_ativo['Range de Comissão à Vista'] = 1/100
+  # Fixei que é 2 % em cada pois a vendedora Eh primeiro mês? e Ativo tem comissão de 2%
+  ## Como tirei o à vista, coloquei 2% direto
+  final_merged_df_primeiro_mes_e_ativo['Range de Comissão Total'] = 2/100
+#   final_merged_df_primeiro_mes_e_ativo['Range de Comissão à Vista'] = 1/100
 
   # Calculando o valor de comissão pelo atingimento de meta e meta à vista
-  final_merged_df_primeiro_mes_e_ativo["Comissão Total"] = (
-      (final_merged_df_primeiro_mes_e_ativo["Range de Comissão Total"] * final_merged_df_primeiro_mes_e_ativo["Valor líquido"]) +
-      (final_merged_df_primeiro_mes_e_ativo["Range de Comissão à Vista"] * final_merged_df_primeiro_mes_e_ativo["Valor líquido"])
-  )
+#   final_merged_df_primeiro_mes_e_ativo["Comissão Total"] = (
+#       (final_merged_df_primeiro_mes_e_ativo["Range de Comissão Total"] * final_merged_df_primeiro_mes_e_ativo["Valor líquido"]) +
+#       (final_merged_df_primeiro_mes_e_ativo["Range de Comissão à Vista"] * final_merged_df_primeiro_mes_e_ativo["Valor líquido"])
+#   )
+  final_merged_df_primeiro_mes_e_ativo["Comissão Total"] = (final_merged_df_primeiro_mes_e_ativo["Range de Comissão Total"] * final_merged_df_primeiro_mes_e_ativo["Valor líquido"])
 
   #Verificando se o valor é maior ou menor que o garantido e substituindo caso seja menor:
   final_merged_df_primeiro_mes_e_ativo["Comissão Total"] = np.where(
@@ -364,13 +367,17 @@ def Comission_calculator(vmb,venda_x_pgto,arquivo_principal_path,mes,ano):
   # Aplicando as funções para calcular a comissão nas respectivas colunas
   final_merged_df_normal['Range de Comissão Total'] = final_merged_df_normal['Atingimento De Meta Total'].apply(calcular_comissao_total)
 
-  final_merged_df_normal['Range de Comissão à Vista'] = final_merged_df_normal['Atingimento de Meta À Vista'].apply(calcular_comissao_vista)
+#   final_merged_df_normal['Range de Comissão à Vista'] = final_merged_df_normal['Atingimento de Meta À Vista'].apply(calcular_comissao_vista)
 
   # Calculando o valor de comissão pelo atingimento de meta e meta à vista
-  final_merged_df_normal["Comissão Total"] = (
-      (final_merged_df_normal["Range de Comissão Total"] * final_merged_df_normal["Valor líquido"]) +
-      (final_merged_df_normal["Range de Comissão à Vista"] * final_merged_df_normal["Valor líquido"])
-  )
+  ## essa era de quando considerávamos a atingimento de à vista 
+#   final_merged_df_normal["Comissão Total"] = (
+#       (final_merged_df_normal["Range de Comissão Total"] * final_merged_df_normal["Valor líquido"]) +
+#       (final_merged_df_normal["Range de Comissão à Vista"] * final_merged_df_normal["Valor líquido"])
+#   )
+
+  final_merged_df_normal["Comissão Total"] = (final_merged_df_normal["Range de Comissão Total"] * final_merged_df_normal["Valor líquido"])
+
 
   normal_groupby = final_merged_df_normal.groupby(["Unidade", "Consultor","Mês/Ano"]).agg({"Comissão Total": "sum"}).reset_index()
   normal_groupby
@@ -382,7 +389,8 @@ def Comission_calculator(vmb,venda_x_pgto,arquivo_principal_path,mes,ano):
   visualisation_df.sort_values(by=["Unidade", "Consultor"])
 
   # Formata as colunas de valor para R$
-  valor_cols = ["Meta de Vendas", "Valor líquido", "Valor líquido à Vista", "Valor do Garantido", "Comissão Total"]
+#   valor_cols = ["Meta de Vendas", "Valor líquido", "Valor líquido à Vista", "Valor do Garantido", "Comissão Total"]
+  valor_cols = ["Meta de Vendas", "Valor líquido","Valor do Garantido", "Comissão Total"]
   for col in valor_cols:
       if col in visualisation_df.columns:
           visualisation_df[col] = visualisation_df[col].apply(lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
