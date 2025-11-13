@@ -284,7 +284,7 @@ def Comission_calculator(vmb,venda_x_pgto,arquivo_principal_path,mes,ano):
 
   def calcular_comissao_total(atingimento):
       if atingimento <= 80:
-          return 0.50 / 100
+          return 1.0 / 100
       elif 80 < atingimento <= 90:
           return 1.5 / 100
       elif 90 < atingimento <= 100:
