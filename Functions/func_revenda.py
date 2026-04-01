@@ -18,6 +18,8 @@ def calcular_ranking_revenda(base):
     base = base.loc[base['Revenda'] == "SIM"]
     base = base.loc[~base['Avaliador'].isna()]
 
+    base['Unidade'] = base['Unidade'].astype(str)
+
     base['Valor líquido'] = base['Valor líquido'].fillna(0)
 
     base = base.loc[base['Unidade'] != 'PRAIA GRANDE']
