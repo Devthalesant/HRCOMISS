@@ -155,6 +155,7 @@ if vmb and mes and ano:
                 )
                 
             except Exception as e:
+                import sys, pandas as pd, pyarrow as pa, streamlit as st
                 st.error(f"Ocorreu um erro ao processar o arquivo: {str(e)}")
                 st.write("Python:", sys.version)
                 st.write("pandas:", pd.__version__)
@@ -191,5 +192,5 @@ st.markdown(
 )
 
 
-import sys, pandas as pd, pyarrow as pa, streamlit as st
+
 
