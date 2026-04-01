@@ -5,7 +5,7 @@ import io
 import xlsxwriter
 import re
 
-
+## função major
 def calcular_ranking_revenda(base):
     base = pd.read_excel(base)
 

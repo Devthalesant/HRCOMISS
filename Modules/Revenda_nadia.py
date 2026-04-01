@@ -107,6 +107,7 @@ with col3:
 
 # Adicionar um separador visual
 st.markdown("---")
+## Arruando
 
 if vmb and mes and ano:
     calcular = st.button("Calcular Ranking 🔝", use_container_width=True)
@@ -181,3 +182,14 @@ st.markdown(
     'Desenvolvido para análise de desempenho de revenda</div>',
     unsafe_allow_html=True
 )
+
+
+import sys, pandas as pd, pyarrow as pa, streamlit as st
+
+print("Python:", sys.version)
+print("pandas:", pd.__version__)
+print("pyarrow:", pa.__version__)
+print("streamlit:", st.__version__)
+# print(df["Unidade"].dtype)
+# print(type(df["Unidade"].array))
+# print(df["Unidade"].head())
