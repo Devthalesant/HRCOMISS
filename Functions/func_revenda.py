@@ -50,7 +50,14 @@ def calcular_ranking_revenda(base):
 
     base['avaliadora_padronizada'] = base['avaliadora_padronizada'].str.upper()
 
-    groupby_revenda = base.groupby(['avaliadora_padronizada']).agg({"Unidade" : 'unique','Valor líquido' : 'sum'}).reset_index()
+    groupby_revenda = (
+    base.groupby('avaliadora_padronizada')
+    .agg({
+        'Unidade': lambda x: ', '.join(sorted(pd.Series(x).dropna().astype(str).unique())),
+        'Valor líquido': 'sum'
+    })
+    .reset_index()
+)
 
     groupby_revenda = groupby_revenda.sort_values(by=['Valor líquido'],ascending=False).reset_index(drop=True)
 
