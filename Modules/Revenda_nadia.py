@@ -156,6 +156,13 @@ if vmb and mes and ano:
                 
             except Exception as e:
                 st.error(f"Ocorreu um erro ao processar o arquivo: {str(e)}")
+                st.write("Python:", sys.version)
+                st.write("pandas:", pd.__version__)
+                st.write("pyarrow:", pa.__version__)
+                st.write("streamlit:", st.__version__)
+                # print(df["Unidade"].dtype)
+                # print(type(df["Unidade"].array))
+                # print(df["Unidade"].head())
 
 else: 
     st.markdown(
@@ -186,10 +193,3 @@ st.markdown(
 
 import sys, pandas as pd, pyarrow as pa, streamlit as st
 
-print("Python:", sys.version)
-print("pandas:", pd.__version__)
-print("pyarrow:", pa.__version__)
-print("streamlit:", st.__version__)
-# print(df["Unidade"].dtype)
-# print(type(df["Unidade"].array))
-# print(df["Unidade"].head())
