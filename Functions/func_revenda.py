@@ -33,7 +33,10 @@ def calcular_ranking_revenda(base):
     "Nathalia Ranciaro Calabrez",
     "Karine Oliveira Santos",
     "Gabriela Gomes Magalhaes dos Anjos",
-    "Eloiza Karyna Zonho"
+    "Eloiza Karyna Zonho",
+    "Giulia de Oliveira Quintino",
+    "Jacqueline Sobral dos Santos",
+    "Cintia dos Reis",
     ]
 
     mask = ~base['Avaliador'].str.contains('|'.join(personais), case=False, na=False)
